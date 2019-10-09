@@ -1,5 +1,6 @@
 'use strict'
 
+var config = require('./config.json')
 var chai        = require('chai');
 var chaiSubset  = require('chai-subset');
 chai.use(chaiSubset);
@@ -8,7 +9,7 @@ let edgeRouter = require('../index')
 
 describe.only('test edgeRouter', function(){
     it('start test', function(){
-        edgeRouter.start('/dev/ttyUSB0',19200,[])
+        edgeRouter.start('/dev/ttyUSB0',19200,[], config.mqttServer, config.mqttSubscribe)
     })
     it('simulate data 257 for index 0', function(){
         let bufdata = Buffer.alloc(6)
@@ -45,5 +46,7 @@ describe.only('test edgeRouter', function(){
         bufdata[6] = 255    //crc
         edgeRouter.simulateData(bufdata)
     })
+
+
 
 })
