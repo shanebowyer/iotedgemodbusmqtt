@@ -4,7 +4,7 @@
   "description": "IoT Edge Router/Controller communicates locally with modbus device and interfaces to the cloud via mqtt",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha --timeout 5000 --reporter spec",
+    "test": "./node_modules/.bin/mocha --timeout 1000 --reporter spec",
     "start": "node index.js"
   },
   "keywords": [

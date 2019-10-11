@@ -47,7 +47,13 @@ let tools = {
                         deferred.reject(err)
                     }else{
                         args.mqtt = mqtt
-                        deferred.resolve(args)
+                        mqtt.subscribe(config.mqttControlSubscribe, function (err) {
+                            if (err) {
+                                deferred.reject(err)
+                            }else{
+                                deferred.resolve(args)
+                            }
+                        })
                     }
                 })
             })
@@ -55,13 +61,34 @@ let tools = {
             deferred.reject(e)
         }
         return deferred.promise
-    }    
+    },
+    calculateCRC: function(byteData){
+        var x;
+        var crc;
+        var y;
+        var tmp;
+        crc = 65535;
+        for (x = 0; x < byteData.length - 2; x++)
+        {
+            crc ^= byteData[x];
+            for (y = 0; y < 8; y++)
+            {
+                tmp = (crc & 1);
+                crc >>= 1;
+                if (tmp != 0)
+                {
+                    crc ^= 40961;
+                }
+            }
+        }
+        return crc;
+    }      
 }
 
 
 describe.only('test edgeRouter', function(){
-    it('start test', function(){
-        edgeRouter.start('/dev/ttyUSB0', 19200, commands, config.mqttServer, config.mqttSubscribe)
+    it.only('start test', function(){
+        edgeRouter.start('/dev/ttyUSB0', 19200, commands, config.mqttServer, config.mqttSubscribe, config.mqttControlSubscribe)
     })
     it('simulate data 257 for index 0', function(){
         let bufdata = Buffer.alloc(6)
@@ -127,6 +154,92 @@ describe.only('test edgeRouter', function(){
         }
     })
 
+    it('send modbus write/control via mqtt', async function(){
+
+        async function sendData(args){
+            let deferred = Q.defer()
+
+            let tOut = setTimeout(function(){
+                deferred.reject('Timeout to wrtie/control command')
+            },2000)
+
+            let response = args
+            try{
+                response = await tools.connectMqtt(response)
+                response.mqtt.on('message', function (topic, message) {
+                    let data = JSON.parse(message.toString())
+                    if(typeof data.control == 'undefined'){
+                        clearTimeout(tOut)
+                        response.mqtt.removeAllListeners('message')
+                        deferred.resolve({topic,message})
+                    }
+                })
+            }catch(e){
+                deferred.reject(e)
+            }
+
+
+            let bufdata = Buffer.alloc(11)
+            bufdata[0] = 1                  //rtuid
+            bufdata[1] = 16                 //function code
+            bufdata[2] = (6 / 256) & 256    //Start Register
+            bufdata[3] = 6 & 256            //Start Register
+            bufdata[4] = (1 / 256) & 256    //Number Of Register
+            bufdata[5] = 1 & 256            //Number Of Register
+            bufdata[6] = 2                  //Byte Count
+            bufdata[7] = (200 >> 8) & 255   //Value
+            bufdata[8] = 200 & 255          //Value
+
+            let crc = tools.calculateCRC(bufdata)
+            bufdata[9]  = crc & 255          //crc
+            bufdata[10] = (crc >> 8) & 255   //crc
+
+            response.mqtt.publish(config.mqttControlSubscribe, JSON.stringify({ "control": bufdata }))
+            return deferred.promise
+        }
+
+        let response = {}
+        try{
+            response = await sendData(response)
+            let data = JSON.parse(response.message.toString())
+            expect(data.AI1).to.equal(200);
+        }catch(e){
+            throw e
+        }
+    })
+
+    it('simulate write/control success', async function(){
+        async function sendData(args){
+            let deferred = Q.defer()
+
+            let response = args
+            try{
+                response = await tools.connectMqtt(response)
+                response.mqtt.on('message', function (topic, message) {
+                    response.mqtt.removeAllListeners('message')
+                    deferred.resolve({topic,message})
+                })
+            }catch(e){
+                deferred.reject(e)
+            }
+
+
+            let bufdata = Buffer.alloc(6)
+            bufdata[0] = 1      //rtuid
+            bufdata[1] = 16     //function code
+            edgeRouter.simulateData(bufdata)    
+            return deferred.promise
+        }
+
+        let response = {}
+        try{
+            response = await sendData(response)
+            let data = JSON.parse(response.message.toString())
+            expect(data.result).to.equal('success');
+        }catch(e){
+            throw e
+        }        
+    })
 
 
 })
