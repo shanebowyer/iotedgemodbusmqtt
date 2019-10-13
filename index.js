@@ -1,7 +1,5 @@
 'use strict'
-
 let EDGE = require('./lib/edge')
-
 let edge
 
 exports.start = function (options) {

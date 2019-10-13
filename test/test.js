@@ -86,6 +86,7 @@ let tools = {
 
 describe('test edgeRouter', function(){
     it('start test', function(){
+
         edgeRouter.start({
             rtuId: config.rtuId,
             commPort: '/dev/ttyUSB0',
