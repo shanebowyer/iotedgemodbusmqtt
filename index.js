@@ -4,9 +4,9 @@ let EDGE = require('./lib/edge')
 
 let edge
 
-exports.start = function (commPort, baud, commands, mqttServer, mqttSubscribe, mqttControlSubscribe) {
-    console.log("Starting edge router on commPort",commPort);
-    edge = new EDGE(commPort,baud,commands, mqttServer, mqttSubscribe, mqttControlSubscribe)
+exports.start = function (options) {
+    console.log("Starting edge router on commPort",options.commPort);
+    edge = new EDGE(options)
 }
 
 exports.simulateData = function(bufdata){
