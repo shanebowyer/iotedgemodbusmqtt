@@ -96,7 +96,7 @@ describe('test edgeRouter', function(){
             mqttUserName: config.mqttUserName,
             mqttPassword: config.mqttPassword,
             mqttSubscribe: config.mqttSubscribe, 
-            txTimeSP: 2,
+            txTimeSP: 60,
             enable232: 'false'
         })
     })
