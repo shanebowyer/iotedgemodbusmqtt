@@ -22,18 +22,32 @@ let commands = [
         input: "AI1",
         cofsSP: 1,
         cofsValue: null
-    },
-    {
-        index: 1,
-        RTUAddress: 1,
-        functionCode: 3,
-        register: 4355,
-        output: [],
-        input: "AI3",
-        cofsSP: 3,
-        cofsValue: null
     }
 ]
+
+// let commands = [
+//     {
+//         index: 0,
+//         RTUAddress: 1,
+//         functionCode: 3,
+//         register: 4354,
+//         output: [],
+//         input: "AI1",
+//         cofsSP: 1,
+//         cofsValue: null
+//     },
+//     {
+//         index: 1,
+//         RTUAddress: 1,
+//         functionCode: 3,
+//         register: 4355,
+//         output: [],
+//         input: "AI3",
+//         cofsSP: 3,
+//         cofsValue: null
+//     }
+// ]
+
 
 let txStructure = {
     txType: null,
