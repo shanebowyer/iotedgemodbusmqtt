@@ -84,8 +84,8 @@ let tools = {
     }      
 }
 
-describe('test edgeRouter', function(){
-    it('start test', function(){
+describe.only('test edgeRouter', function(){
+    it.only('start test', function(){
 
         edgeRouter.start({
             rtuId: config.rtuId,
@@ -98,7 +98,7 @@ describe('test edgeRouter', function(){
             mqttPassword: config.mqttPassword,
             mqttSubscribe: config.mqttSubscribe, 
             txTimeSP: 60,
-            enable232: 'false'
+            enable232: 'true'
         })
     })
     it('simulate data 257 for index 0', function(){
