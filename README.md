@@ -5,6 +5,8 @@ https://blog.bitid.co.za/iotedgemodbusmqtt
 
 <h1>IoT Edge Router/Controller communicates locally with modbus device and interfaces to the cloud via mqtt</h1>
 
+![modbus image](https://lh3.googleusercontent.com/eeg5_R7aSlCbE__P-R8QisHuu2VG6uQkwjZ7nuNkS0AFkmlW0qPBeOIp8LinJEjeXd6QQYWsvQ=w371)
+
 <p align="center">
   <img src="https://lh3.googleusercontent.com/eeg5_R7aSlCbE__P-R8QisHuu2VG6uQkwjZ7nuNkS0AFkmlW0qPBeOIp8LinJEjeXd6QQYWsvQ=w371">
 </p>
@@ -209,6 +211,8 @@ let options = {
 edgeRouter.start(options)
 
 ```
+# Docker Image
+https://github.com/shanebowyer/iotedgemodbusmqtt_docker
 
 # MODBUS TCP
 Currently this module only supports serial communication. I will be adding MODBUS TCP soon!
