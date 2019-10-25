@@ -12,19 +12,6 @@ let MQTT        = require('mqtt');
 
 let edgeRouter = require('../index')
 
-let commands = [
-    {
-        index: 0,
-        RTUAddress: 1,
-        functionCode: 3,
-        register: 4354,
-        output: [],
-        input: "AI1",
-        cofsSP: 1,
-        cofsValue: null
-    }
-]
-
 // let commands = [
 //     {
 //         index: 0,
@@ -35,18 +22,31 @@ let commands = [
 //         input: "AI1",
 //         cofsSP: 1,
 //         cofsValue: null
-//     },
-//     {
-//         index: 1,
-//         RTUAddress: 1,
-//         functionCode: 3,
-//         register: 4355,
-//         output: [],
-//         input: "AI3",
-//         cofsSP: 3,
-//         cofsValue: null
 //     }
 // ]
+
+let commands = [
+    {
+        index: 0,
+        RTUAddress: 1,
+        functionCode: 3,
+        register: 4354,
+        output: [],
+        input: "AI1",
+        cofsSP: 1,
+        cofsValue: null
+    },
+    {
+        index: 1,
+        RTUAddress: 1,
+        functionCode: 3,
+        register: 4355,
+        output: [],
+        input: "AI3",
+        cofsSP: 3,
+        cofsValue: null
+    }
+]
 
 
 let txStructure = {
@@ -112,7 +112,7 @@ describe.only('test edgeRouter', function(){
             mqttPassword: config.mqttPassword,
             mqttSubscribe: config.mqttSubscribe, 
             txTimeSP: 60,
-            enable232: 'true'
+            enable232: 'false'
         })
     })
     it('simulate data 257 for index 0', function(){
